@@ -9,6 +9,7 @@ import FileHelper.ExcelHelper;
 import callAPIHelper.CallApiHelper;
 import com.google.gson.Gson;
 import dataInquireCard.SaveDataPostInquiredCard;
+import dataWithdrawFunds.SaveDataWithdrawFunds;
 import java.io.IOException;
 
 /**
@@ -24,13 +25,15 @@ public class App_TestWithdrawFund {
         // TODO code application logic here
         Gson gson = new Gson();
         ExcelHelper excelH = new ExcelHelper();
-        SaveDataPostInquiredCard saveDataInquireCard = excelH.ReadFile("test.xlsx");
-        System.out.println("data file: " + gson.toJson(saveDataInquireCard));
-        
-        CallApiHelper caller = new CallApiHelper();
-        caller.RunTestApiInquireCard(saveDataInquireCard);
-        
-        System.out.println("data file after run test: " + gson.toJson(saveDataInquireCard));
-        excelH.WriteResultApiInquireCardToFile("test.xlsx", saveDataInquireCard);
+//        SaveDataPostInquiredCard saveDataInquireCard = excelH.ReadFileAPIInquireCard("test.xlsx");
+//        System.out.println("data file: " + gson.toJson(saveDataInquireCard));
+//        
+//        CallApiHelper caller = new CallApiHelper();
+//        caller.RunTestApiInquireCard(saveDataInquireCard);
+//        
+//        System.out.println("data file after run test: " + gson.toJson(saveDataInquireCard));
+//        excelH.WriteResultApiInquireCardToFile("test.xlsx", saveDataInquireCard);
+
+        SaveDataWithdrawFunds saveData = excelH.ReadFileAPIWithdrawCard("test.xlsx");
     }
 }

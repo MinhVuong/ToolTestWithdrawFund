@@ -56,7 +56,7 @@ public class CheckSumInquireCard {
     public String createCheckSum() throws NoSuchAlgorithmException, UnsupportedEncodingException{
         Gson gson = new Gson();
         this.secrectKey = "a";
-        System.out.println("Data: " + gson.toJson(this.data));
+//        System.out.println("Data: " + gson.toJson(this.data));
         String rawData = this.caller + "|" + gson.toJson(this.data) + this.secrectKey;
         //System.out.println("RawData: " + rawData);
         byte[] encrypt = rawData.getBytes();
