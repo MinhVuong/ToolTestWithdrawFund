@@ -29,7 +29,7 @@ public class App_TestWithdrawFund {
         Gson gson = new Gson();
         ExcelHelper excelH = new ExcelHelper();
         DataTestCaseFullList dataFulls = excelH.ReadDataFromFileExcel("test.xlsx");
-        
+        excelH.WriteResultTestCase("test.xlsx", dataFulls);
         
 //        SaveDataPostInquiredCard saveDataInquireCard = excelH.ReadFileAPIInquireCard("test.xlsx");
 //        System.out.println("data file: " + gson.toJson(saveDataInquireCard));

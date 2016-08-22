@@ -385,25 +385,7 @@ public class ExcelHelper {
 //        }
 //    }
 //
-//    public void WriteResultApiWithdrawFunds(String filename, SaveDataWithdrawFunds saveData) {
-//        try {
-//            File excel = new File(filename);
-//            FileInputStream fis = new FileInputStream(excel);
-//            XSSFWorkbook book = new XSSFWorkbook(fis);
-//            XSSFSheet sheet = book.getSheet("api_withdraw");
-//            for (DataRowWithdrawFunds dataRow : saveData.getDatas()) {
-//                Row row = sheet.getRow(dataRow.getId());
-//                Cell cell = row.getCell(12);
-//                cell.setCellValue(dataRow.getCodeReal());
-//            }
-//            fis.close();
-//            FileOutputStream fos = new FileOutputStream(new File("test.xlsx"));
-//            book.write(fos);
-//            fos.close();
-//        } catch (Exception t) {
-//            System.out.println("Throwable WriteResultApiWithdrawFunds " + t.getMessage());
-//        }
-//    }
+
     //// Start again
     public SheetsOfFile ReadSheetsOfFile(String fileName) {
         try {
@@ -438,7 +420,7 @@ public class ExcelHelper {
             Iterator<Row> itr = sheet.iterator();
             SaveData saveData = new SaveData();
             ArrayList<RowDataFromFile> datas = new ArrayList<RowDataFromFile>();
-            int colmnDataStart = 0, colmnDataStop = 0, colmnDataReqStart = 0;
+            int colmnDataStart = 0, colmnDataStop = 0, colmnDataReqStart = 0, numReal=0;
             ArrayList<String> nameDataObject = new ArrayList<String>();
             ArrayList<String> nameDataRequest = new ArrayList<String>();
             JsonObject jObjReq = new JsonObject();
@@ -463,6 +445,10 @@ public class ExcelHelper {
                                         if (cell1.getStringCellValue().equals("Threads")) {
                                             colmnDataStop = cell1.getColumnIndex() - 1;
                                         }
+                                        if (cell1.getStringCellValue().equals("Result Real")) {
+//                                            System.out.println("Colmn Reail: " + cell1.getColumnIndex());
+                                            numReal = cell1.getColumnIndex();
+                                        }
                                         break;
                                     }
                                     case Cell.CELL_TYPE_NUMERIC: {
@@ -478,7 +464,7 @@ public class ExcelHelper {
                             String caller = row1.getCell(colmnDataStart).getStringCellValue();
                             nameDataRequest.add(caller);
 //                            System.out.println("Caller: " + caller);
-                            int temp = 5;
+                            int temp = colmnDataStart + 1;
 //                            System.out.println("temp: " + temp);
                             while (temp <= colmnDataStop) {
                                 String nameObj = row2.getCell(temp).getStringCellValue();
@@ -503,8 +489,7 @@ public class ExcelHelper {
                     case Cell.CELL_TYPE_NUMERIC: {
 //                        System.out.println(cell.getNumericCellValue());
                         if (cell.getNumericCellValue() > 0) {
-                            Double di = cell.getNumericCellValue();
-                            dataRow.setId(di.intValue());
+                            dataRow.setId(row.getRowNum());
                             JsonObject jObj = new JsonObject();
                             int isChkSumOrSignature = 0;
                             int arrIndex = 0;
@@ -527,7 +512,8 @@ public class ExcelHelper {
                                 } else if (cell1.getColumnIndex() > colmnDataStop) {
                                     if (arrIndexRow == 0) {
                                         dataRow.setThread(GetValueIntegerFromCell(cell1));
-                                    } else {
+                                    } else if (arrIndexRow == 1){
+//                                        System.out.println("code: " + GetValueStringFromCell(cell1));
                                         dataRow.setResultExpect(GetValueStringFromCell(cell1));
                                     }
                                     arrIndexRow++;
@@ -541,10 +527,12 @@ public class ExcelHelper {
                             } else if (isChkSumOrSignature == 2) {
                                 jObjReq.addProperty("signature", "signature");
                             }
-                            System.out.println("data Request: " + jObjReq.toString());
+//                            System.out.println("data Request: " + jObjReq.toString());
                             dataRow.setData(jObjReq);
+                            dataRow.setNumReal(numReal);
                             Gson gson = new Gson();
                             System.out.println("data row: " + gson.toJson(dataRow));
+                            
                             datas.add(dataRow);
                         }
                         break;
@@ -603,7 +591,7 @@ public class ExcelHelper {
                 String urlValue = GetUrlValueFromUrls(urls, str);
 
                 dataTestCaseFull.setDatas(saveData.getDatas());
-                dataTestCaseFull.setUrl(urlValue);
+                dataTestCaseFull.setDataURL(new DataURL(str, urlValue));
 
                 dataFull.add(dataTestCaseFull);
             }
@@ -652,5 +640,39 @@ public class ExcelHelper {
             }
         }
         return str;
+    }
+    
+    
+    public void WriteResultTestCase(String fileName, DataTestCaseFullList data) {
+        try {
+           for(DataTestCaseFull dataFull : data.getDataFulls()){
+               WriteResultTestCaseForSheet(fileName, dataFull.getDataURL().getNameSheet(), dataFull);
+           }
+        } catch (Exception t) {
+            System.out.println("Throwable WriteResultTestCase " + t.getMessage());
+        }
+    }
+    
+         
+    private void WriteResultTestCaseForSheet(String fileName, String sheetName, DataTestCaseFull data){
+        try {
+            File excel = new File(fileName);
+            FileInputStream fis = new FileInputStream(excel);
+            XSSFWorkbook book = new XSSFWorkbook(fis);
+            XSSFSheet sheet = book.getSheet(sheetName);
+            for(RowDataFromFile dataRow: data.getDatas()){
+                Row row = sheet.getRow(dataRow.getId());
+                Cell cell = row.getCell(dataRow.getNumReal());
+                if(cell == null)
+                    cell = row.createCell(dataRow.getNumReal());
+                cell.setCellValue(Integer.parseInt(dataRow.getResultReal()));
+            }
+            fis.close();
+            FileOutputStream fos = new FileOutputStream(new File(fileName));
+            book.write(fos);
+            fos.close();
+        } catch (Exception t) {
+            System.out.println("Throwable WriteResultTestCaseForSheet " + t.getMessage());
+        }
     }
 }

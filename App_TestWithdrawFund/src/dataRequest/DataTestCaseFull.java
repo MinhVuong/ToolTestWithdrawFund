@@ -5,6 +5,7 @@
  */
 package dataRequest;
 
+import dataURL.DataURL;
 import java.util.ArrayList;
 
 /**
@@ -13,14 +14,14 @@ import java.util.ArrayList;
  */
 public class DataTestCaseFull {
     private ArrayList<RowDataFromFile> datas;
-    private String url;
+    private DataURL dataUrl;
 
     public DataTestCaseFull() {
     }
 
-    public DataTestCaseFull(ArrayList<RowDataFromFile> datas, String url) {
+    public DataTestCaseFull(ArrayList<RowDataFromFile> datas, DataURL url) {
         this.datas = datas;
-        this.url = url;
+        this.dataUrl = url;
     }
 
     public ArrayList<RowDataFromFile> getDatas() {
@@ -31,12 +32,12 @@ public class DataTestCaseFull {
         this.datas = datas;
     }
 
-    public String getUrl() {
-        return url;
+    public DataURL getDataURL() {
+        return dataUrl;
     }
 
-    public void setUrl(String url) {
-        this.url = url;
+    public void setDataURL(DataURL url) {
+        this.dataUrl = url;
     }
     
 }
