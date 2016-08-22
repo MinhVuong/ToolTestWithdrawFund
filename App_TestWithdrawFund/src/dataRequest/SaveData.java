@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package dataInquireCard;
+package dataRequest;
 
 import java.util.ArrayList;
 
@@ -11,21 +11,21 @@ import java.util.ArrayList;
  *
  * @author CPU01661-local
  */
-public class SaveDataPostInquiredCard {
-    private ArrayList<DataRowInquireCard> datas;
+public class SaveData {
+    private ArrayList<RowDataFromFile> datas;
 
-    public SaveDataPostInquiredCard() {
+    public SaveData() {
     }
 
-    public SaveDataPostInquiredCard(ArrayList<DataRowInquireCard> datas) {
+    public SaveData(ArrayList<RowDataFromFile> datas) {
         this.datas = datas;
     }
 
-    public ArrayList<DataRowInquireCard> getDatas() {
+    public ArrayList<RowDataFromFile> getDatas() {
         return datas;
     }
 
-    public void setDatas(ArrayList<DataRowInquireCard> datas) {
+    public void setDatas(ArrayList<RowDataFromFile> datas) {
         this.datas = datas;
     }
     
