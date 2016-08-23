@@ -14,6 +14,10 @@ import dataRequest.SaveData;
 import dataRequest.SheetsOfFile;
 import dataURL.URLs;
 import java.io.IOException;
+import java.util.concurrent.BrokenBarrierException;
+import java.util.concurrent.CyclicBarrier;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -24,25 +28,13 @@ public class App_TestWithdrawFund {
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, InterruptedException, BrokenBarrierException {
         // TODO code application logic here
         Gson gson = new Gson();
         ExcelHelper excelH = new ExcelHelper();
         DataTestCaseFullList dataFulls = excelH.ReadDataFromFileExcel("test.xlsx");
-        excelH.WriteResultTestCase("test.xlsx", dataFulls);
-        
-//        SaveDataPostInquiredCard saveDataInquireCard = excelH.ReadFileAPIInquireCard("test.xlsx");
-//        System.out.println("data file: " + gson.toJson(saveDataInquireCard));
-//        
-//        CallApiHelper caller = new CallApiHelper();
-//        caller.RunTestApiInquireCard(saveDataInquireCard);
-//        
-//        System.out.println("data file after run test: " + gson.toJson(saveDataInquireCard));
-//        excelH.WriteResultApiInquireCardToFile("test.xlsx", saveDataInquireCard);
-//
-//        SaveDataWithdrawFunds saveData = excelH.ReadFileAPIWithdrawCard("test.xlsx");
-//        CallApiHelper caller = new CallApiHelper();
-//        caller.RunTestApiWithdrawFunds(saveData);
-//        excelH.WriteResultApiWithdrawFunds("test.xlsx", saveData);
+        dataFulls = excelH.RunTest(dataFulls);
+//        excelH.WriteResultTestCase("test.xlsx", dataFulls);
+
     }
 }

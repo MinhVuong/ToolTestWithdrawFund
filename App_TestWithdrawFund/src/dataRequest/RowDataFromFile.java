@@ -19,7 +19,7 @@ public class RowDataFromFile {
     private String resultReal;
     private int numReal;
     public RowDataFromFile() {
-        this.resultReal = "1";
+//        this.resultReal = "1";
     }
 
     public RowDataFromFile(int id, JsonObject data, int thread, String resultExpect, String resultReal, int numR) {

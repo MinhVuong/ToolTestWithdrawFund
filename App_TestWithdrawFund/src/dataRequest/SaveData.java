@@ -12,20 +12,20 @@ import java.util.ArrayList;
  * @author CPU01661-local
  */
 public class SaveData {
-    private ArrayList<RowDataFromFile> datas;
+    private ArrayList<DataSheet> datas;
 
     public SaveData() {
     }
 
-    public SaveData(ArrayList<RowDataFromFile> datas) {
+    public SaveData(ArrayList<DataSheet> datas) {
         this.datas = datas;
     }
 
-    public ArrayList<RowDataFromFile> getDatas() {
+    public ArrayList<DataSheet> getDatas() {
         return datas;
     }
 
-    public void setDatas(ArrayList<RowDataFromFile> datas) {
+    public void setDatas(ArrayList<DataSheet> datas) {
         this.datas = datas;
     }
     

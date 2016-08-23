@@ -6,6 +6,10 @@
 package callAPIHelper;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import dataRequest.DataTestCaseFull;
+import dataRequest.RowDataFromFile;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -107,4 +111,37 @@ public class CallApiHelper {
 //            }
 //        }
 //    }
+    
+    public String  CallAPIForURL(String url, RowDataFromFile data) throws UnsupportedEncodingException, IOException{
+        
+        String code = "";
+        String POST_URL = url;
+        CloseableHttpClient httpClient = HttpClients.createDefault();
+        HttpPost httpPost = new HttpPost(POST_URL);
+        httpPost.setHeader("Accept", "text/plain");
+        httpPost.setHeader("Content-type", "text/plain");
+        JsonObject jdata = data.getData();
+        System.out.println("data post: " + jdata.toString());
+        httpPost.setEntity(new StringEntity(jdata.toString()));
+        CloseableHttpResponse httpResponse = httpClient.execute(httpPost);
+        if (httpResponse.getStatusLine().getStatusCode() == 200) {
+            BufferedReader reader = new BufferedReader(new InputStreamReader(httpResponse.getEntity().getContent()));
+            String inputLine;
+            StringBuffer response = new StringBuffer();
+            while ((inputLine = reader.readLine()) != null) {
+                response.append(inputLine);
+            }
+            reader.close();
+            JsonObject jresp = new JsonObject();
+            jresp = gson.fromJson(response.toString(), JsonObject.class);
+            JsonElement je = jresp.get("code");
+            code = je.getAsString();
+            System.out.println("data resp: " + jresp.toString());
+        }else{
+            System.out.println("API Fail status code = " + httpResponse.getStatusLine().getStatusCode());
+//            return new DataResponseWithdrawFunds();/
+            code = "-1";
+        }
+        return code;
+    }
 }

@@ -13,22 +13,22 @@ import java.util.ArrayList;
  * @author CPU01661-local
  */
 public class DataTestCaseFull {
-    private ArrayList<RowDataFromFile> datas;
+    private DataSheet datas;
     private DataURL dataUrl;
 
     public DataTestCaseFull() {
     }
 
-    public DataTestCaseFull(ArrayList<RowDataFromFile> datas, DataURL url) {
+    public DataTestCaseFull(DataSheet datas, DataURL url) {
         this.datas = datas;
         this.dataUrl = url;
     }
 
-    public ArrayList<RowDataFromFile> getDatas() {
+    public DataSheet getDatas() {
         return datas;
     }
 
-    public void setDatas(ArrayList<RowDataFromFile> datas) {
+    public void setDatas(DataSheet datas) {
         this.datas = datas;
     }
 
@@ -39,5 +39,12 @@ public class DataTestCaseFull {
     public void setDataURL(DataURL url) {
         this.dataUrl = url;
     }
-    
+
+    public DataURL getDataUrl() {
+        return dataUrl;
+    }
+
+    public void setDataUrl(DataURL dataUrl) {
+        this.dataUrl = dataUrl;
+    }    
 }
