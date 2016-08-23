@@ -7,6 +7,7 @@ package app_testwithdrawfund;
 
 import FileHelper.ExcelHelper;
 import callAPIHelper.CallApiHelper;
+import callAPIHelper.ResultApi;
 import com.google.gson.Gson;
 import dataRequest.DataTestCaseFullList;
 import dataRequest.RowDataFromFile;
@@ -32,8 +33,9 @@ public class App_TestWithdrawFund {
         // TODO code application logic here
         Gson gson = new Gson();
         ExcelHelper excelH = new ExcelHelper();
-        DataTestCaseFullList dataFulls = excelH.ReadDataFromFileExcel("test.xlsx");
-        dataFulls = excelH.RunTest(dataFulls);
+        excelH.CreateFileResultThread();
+//        DataTestCaseFullList dataFulls = excelH.ReadDataFromFileExcel("test.xlsx");
+//        ResultApi resultApi = excelH.RunTest(dataFulls);
 //        excelH.WriteResultTestCase("test.xlsx", dataFulls);
 
     }
