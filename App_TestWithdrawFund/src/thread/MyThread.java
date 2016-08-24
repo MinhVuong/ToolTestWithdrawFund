@@ -31,6 +31,7 @@ public class MyThread extends Thread {
     private JsonObject obj;
     private String url;
     private String code;
+    private long time;
     private CyclicBarrier gate;
 
     public MyThread(JsonObject obj, String url, CyclicBarrier gate) {
@@ -48,7 +49,10 @@ public class MyThread extends Thread {
             httpPost.setHeader("Accept", "text/plain");
             httpPost.setHeader("Content-type", "text/plain");
             httpPost.setEntity(new StringEntity(obj.toString()));
+            long startTime = System.currentTimeMillis();
             CloseableHttpResponse httpResponse = httpClient.execute(httpPost);
+            long endTime = System.currentTimeMillis();
+            time = endTime - startTime;
             if (httpResponse.getStatusLine().getStatusCode() == 200) {
                 BufferedReader reader = new BufferedReader(new InputStreamReader(httpResponse.getEntity().getContent()));
                 String inputLine;
@@ -61,6 +65,7 @@ public class MyThread extends Thread {
                 Gson gson = new Gson();
                 jresp = gson.fromJson(response.toString(), JsonObject.class);
                 JsonElement je = jresp.get("code");
+                
                 code = je.getAsString();
                 System.out.println("Thread - data resp: " + jresp.toString());
             } else {
@@ -85,6 +90,10 @@ public class MyThread extends Thread {
 
     public CyclicBarrier getGate() {
         return gate;
+    }
+
+    public long getTime() {
+        return time;
     }
 
 

@@ -454,7 +454,8 @@ public class ExcelHelper {
             } else {
                 DataTestCaseFull dataTestCaseFull = new DataTestCaseFull();
                 DataSheet dataSheet = ReadTestCaseFileFromSheet(fileName, str);
-
+                Gson gson = new Gson();
+                System.out.println("data sheet: " + gson.toJson(dataSheet));
                 String urlValue = GetUrlValueFromUrls(urls, str);
 
                 dataTestCaseFull.setDatas(dataSheet);
@@ -523,7 +524,7 @@ public class ExcelHelper {
                         String code = caller.CallAPIForURL(dataFull.getDataURL().getUrl(), dataRow);
 //                        String code = "0";
                         dataRow.setResultReal(code);
-                        dataFull.getDatas().getDatas().set(i, dataRow);
+                        dataFull.getDatas().getDatas().set(j, dataRow);
                     } else {
                         JsonObject jObj = dataRow.getData();
                         ThreadResult threadResult = new ThreadResult();
@@ -541,12 +542,13 @@ public class ExcelHelper {
                             thread.start();
                         }
                         int nameT = dataRow.getId() - 3 + 1;
-                        String nameofSheet = dataFull.getDataUrl().getNameSheet() + "_" + Integer.toBinaryString(nameT);
+                        String nameofSheet = dataFull.getDataUrl().getNameSheet() + "_" + Integer.toString(nameT);
                         threadResult.setNameSheet(nameofSheet);
                         // Get Result After call API
+
                         for (MyThread thread : threads) {
                             String code = thread.getCode();
-                            while (code.equals("")) {
+                            while ((code==null) || (code.equals(""))) {
                                 Thread.sleep(100);
                                 code = thread.getCode();
                             }
@@ -570,9 +572,7 @@ public class ExcelHelper {
         JsonObject jObj = new JsonObject();
         for (NameDynamic nameDy : nameDys) {
             if (nameDy.getIsDyn().equals("1")) {
-                String value = old.get(nameDy.getName()).toString();
-                Long l = System.currentTimeMillis() + i;
-                value = Long.toString(l);
+                String value = new String(old.get(nameDy.getName()).getAsString() + i);
                 jObj.addProperty(nameDy.getName(), value);
             } else {
 
@@ -641,7 +641,8 @@ public class ExcelHelper {
                 if (cell == null) {
                     cell = row.createCell(dataRow.getNumReal());
                 }
-                cell.setCellValue(Integer.parseInt(dataRow.getResultReal()));
+                if(dataRow.getResultReal() != null)
+                    cell.setCellValue(Integer.parseInt(dataRow.getResultReal()));
             }
             fis.close();
 
@@ -655,32 +656,25 @@ public class ExcelHelper {
 
     public void WriteResult(String fileName, ResultApi resultApi) {
         WriteResultTestCase(fileName, resultApi.getData());
-        for (ThreadResult threadR : resultApi.getThreads()) {
 
+        CreateFileResultThread("result_threads.xlsx");       // Create File Result
+        for (ThreadResult threadR : resultApi.getThreads()) {
+            CreateSheetResult(threadR);
         }
     }
 
-    public void CreateFileResultThread() {
+    private void CreateFileResultThread(String fileName) {
         try {
-            File excel = new File("result_threads.xlsx");
-            if(!excel.exists()){
-                FileOutputStream fos = new FileOutputStream(excel);
-                XSSFWorkbook book = new XSSFWorkbook();
-                XSSFSheet sheet = book.createSheet("sheet1");
-                Row row = sheet.createRow(0);   
-                Cell cell0 = row.createCell(0);
-                cell0.setCellValue("Nav Value");
-
-                Cell cell1 = row.createCell(1);
-
-                cell1.setCellValue("Amount Change");       
-
-                Cell cell2 = row.createCell(2);
-                cell2.setCellValue("Percent Change");
-                book.write(fos);
-                fos.close();
+            File excel = new File(fileName);
+            if (excel.exists()) {
+                excel.delete();
             }
-        }catch (Exception t) {
+            FileOutputStream fos = new FileOutputStream(new File(fileName));
+            XSSFWorkbook book = new XSSFWorkbook();
+            XSSFSheet sheet = book.createSheet("sheet1");
+            book.write(fos);
+            fos.close();
+        } catch (Exception t) {
             System.out.println("Throwable CreateFileResultThread " + t.getMessage());
         }
     }
@@ -691,18 +685,26 @@ public class ExcelHelper {
             FileInputStream fis = new FileInputStream(excel);
             XSSFWorkbook book = new XSSFWorkbook(fis);
             XSSFSheet sheet = book.createSheet(threadR.getNameSheet());
+            // Create Tile Tile
+            Row row = sheet.createRow(0);
+            Cell cell = row.createCell(0);
+            cell.setCellValue("ID");
+            cell = row.createCell(1);
+            cell.setCellValue("Code Result");
+            cell = row.createCell(2);
+            cell.setCellValue("Time (ms)");
+            //
             for (int i = 0; i < threadR.getThreads().size(); i++) {
-                Row row = sheet.getRow(i);
-                Cell cell1 = row.getCell(0);
-                if (cell1 == null) {
-                    cell1 = row.createCell(0);
-                }
+                Row row1 = sheet.createRow(i+1);
+                Cell cell1 = row1.createCell(0);
                 cell1.setCellValue(i + 1);
-                Cell cell2 = row.getCell(1);
-                if (cell2 == null) {
-                    cell2 = row.createCell(0);
-                }
-                cell2.setCellValue(threadR.getThreads().get(i).getCode());
+                
+                cell1 = row1.createCell(1);
+                cell1.setCellValue(threadR.getThreads().get(i).getCode());
+                
+                cell1 = row1.createCell(2);
+                cell1.setCellValue(threadR.getThreads().get(i).getTime());
+                
             }
             fis.close();
             FileOutputStream fos = new FileOutputStream(new File("result_threads.xlsx"));
