@@ -32,10 +32,11 @@ public class App_TestWithdrawFund {
     public static void main(String[] args) throws IOException, InterruptedException, BrokenBarrierException {
         // TODO code application logic here
         Gson gson = new Gson();
+        System.out.println(System.currentTimeMillis());
         ExcelHelper excelH = new ExcelHelper();
         DataTestCaseFullList dataFulls = excelH.ReadDataFromFileExcel("test.xlsx");
         ResultApi resultApi = excelH.RunTest(dataFulls);
-        excelH.WriteResult("test.xlsx", resultApi);
+//        excelH.WriteResult("test.xlsx", resultApi);
 
     }
 }

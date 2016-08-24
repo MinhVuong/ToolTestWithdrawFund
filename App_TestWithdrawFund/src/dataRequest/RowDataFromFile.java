@@ -18,17 +18,19 @@ public class RowDataFromFile {
     private String resultExpect;
     private String resultReal;
     private int numReal;
+    private String nameAlgorithm;
     public RowDataFromFile() {
 //        this.resultReal = "1";
     }
 
-    public RowDataFromFile(int id, JsonObject data, int thread, String resultExpect, String resultReal, int numR) {
+    public RowDataFromFile(int id, JsonObject data, int thread, String resultExpect, String resultReal, int numR, String nameAlgorithm) {
         this.id = id;
         this.data = data;
         this.thread = thread;
         this.resultExpect = resultExpect;
         this.resultReal = resultReal;
         this.numReal = numR;
+        this.nameAlgorithm = nameAlgorithm;
     }
 
     public int getId() {
@@ -77,6 +79,14 @@ public class RowDataFromFile {
 
     public void setNumReal(int numReal) {
         this.numReal = numReal;
+    }
+
+    public String getNameAlgorithm() {
+        return nameAlgorithm;
+    }
+
+    public void setNameAlgorithm(String nameAlgorithm) {
+        this.nameAlgorithm = nameAlgorithm;
     }
     
 }

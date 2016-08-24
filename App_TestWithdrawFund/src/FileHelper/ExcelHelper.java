@@ -12,6 +12,8 @@ import security.RSASHA1Signature;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import dataHash.DataHash;
+import dataHash.MyDataHash;
 import dataRequest.DataSheet;
 import dataRequest.DataTestCaseFull;
 import dataRequest.DataTestCaseFullList;
@@ -49,173 +51,6 @@ import thread.ThreadResult;
  * @author CPU01661-local
  */
 public class ExcelHelper {
-
-//    public SaveDataPostInquiredCard ReadFileAPIInquireCard(String filename) {
-//        try {
-//            File excel = new File(filename);
-//            FileInputStream fis = new FileInputStream(excel);
-//            XSSFWorkbook book = new XSSFWorkbook(fis);
-//            XSSFSheet sheet = book.getSheet("api_inquireCard");
-//            Iterator<Row> itr = sheet.iterator();
-//            SaveDataPostInquiredCard saveData = new SaveDataPostInquiredCard();
-//            ArrayList<DataRowInquireCard> datas = new ArrayList<DataRowInquireCard>();
-//            while (itr.hasNext()) {
-//                DataRowInquireCard dataRow = new DataRowInquireCard();
-//                Row row = itr.next();
-//                Iterator<Cell> cellIterator = row.cellIterator();
-//                Cell cell = cellIterator.next();
-//                switch (cell.getCellType()) {
-//                    case Cell.CELL_TYPE_STRING: {
-//                        System.out.println(cell.getStringCellValue());
-//                        break;
-//                    }
-//                    case Cell.CELL_TYPE_NUMERIC: {
-//                        Double d = new Double(row.getRowNum());
-//                        System.out.println(row.getRowNum());
-//                        dataRow.setId(row.getRowNum());
-//                        //Xu ly de lay noi dung Test
-//                        int valueR = (int) cell.getNumericCellValue();
-//                        CheckSumInquireCard chkSumH = new CheckSumInquireCard();
-//                        DataPostInquireCard data = new DataPostInquireCard();
-//                        DataInquireCardFull dataI = new DataInquireCardFull();
-//                        if (valueR > 0) {
-//                            while (cellIterator.hasNext()) {
-//                                cell = cellIterator.next();
-//
-//                                switch (cell.getColumnIndex()) {
-//                                    case 4: {                    // Caller
-//                                        data.setCaller(cell.getStringCellValue());
-//                                        chkSumH.setCaller(cell.getStringCellValue());
-//                                        break;
-//                                    }
-//                                    case 5: {                    // Tid
-//                                        switch (cell.getCellType()) {
-//                                            case Cell.CELL_TYPE_STRING: {
-////                                                System.out.println(cell.getStringCellValue());
-//                                                dataI.setTid(cell.getStringCellValue());
-//                                                break;
-//                                            }
-//                                            case Cell.CELL_TYPE_NUMERIC: {
-//                                                d = new Double(cell.getNumericCellValue());
-//                                                dataI.setTid(Integer.toString(d.intValue()));
-//                                                break;
-//                                            }
-//                                        }
-//                                        break;
-//                                    }
-//                                    case 6: {                    // Tn
-//                                        switch (cell.getCellType()) {
-//                                            case Cell.CELL_TYPE_STRING: {
-////                                                System.out.println(cell.getStringCellValue());
-//                                                String encrypt = EncryptHelper.AES256(cell.getStringCellValue());
-//                                                dataI.setTn(encrypt);
-//                                                break;
-//                                            }
-//                                            case Cell.CELL_TYPE_NUMERIC: {
-//                                                d = new Double(cell.getNumericCellValue());
-//                                                String encrypt = EncryptHelper.AES256(d.toString());
-//                                                dataI.setTn(encrypt);
-//                                                break;
-//                                            }
-//                                        }
-//
-//                                        break;
-//                                    }
-//                                    case 7: {                    // Amt
-//                                        switch (cell.getCellType()) {
-//                                            case Cell.CELL_TYPE_STRING: {
-////                                                System.out.println(cell.getStringCellValue());
-//                                                dataI.setAmt(cell.getStringCellValue());
-//                                                break;
-//                                            }
-//                                            case Cell.CELL_TYPE_NUMERIC: {
-//                                                d = new Double(cell.getNumericCellValue());
-//                                                dataI.setAmt(Integer.toString(d.intValue()));
-//                                                break;
-//                                            }
-//                                        }
-//                                        break;
-//                                    }
-//                                    case 8: {                    // Thread
-//                                        switch (cell.getCellType()) {
-//                                            case Cell.CELL_TYPE_STRING: {
-////                                                System.out.println(cell.getStringCellValue());
-//                                                String str = cell.getStringCellValue();
-//                                                dataRow.setThreadNumber(Integer.parseInt(str));
-//                                                break;
-//                                            }
-//                                            case Cell.CELL_TYPE_NUMERIC: {
-//                                                d = new Double(cell.getNumericCellValue());
-//                                                dataRow.setThreadNumber(d.intValue());
-//                                                break;
-//                                            }
-//                                        }
-//                                        break;
-//                                    }
-//                                    case 9: {                    // Expect
-//                                        switch (cell.getCellType()) {
-//                                            case Cell.CELL_TYPE_STRING: {
-////                                                System.out.println(cell.getStringCellValue());
-//                                                String str = cell.getStringCellValue();
-//                                                dataRow.setCodeExpect(Integer.parseInt(str));
-//                                                break;
-//                                            }
-//                                            case Cell.CELL_TYPE_NUMERIC: {
-//                                                d = new Double(cell.getNumericCellValue());
-//                                                dataRow.setCodeExpect(d.intValue());
-//                                                break;
-//                                            }
-//                                        }
-//                                        break;
-//                                    }
-//                                }
-//                            }
-////                            Gson gson = new Gson();
-////                            System.out.println("dataI: " + gson.toJson(dataI));
-//                            chkSumH.setData(dataI);
-//                            data.setData(dataI);
-//                            data.setChksum(chkSumH.createCheckSum());
-////                            System.out.println("data: " + gson.toJson(data));
-//                            dataRow.setData(data);
-//                        }
-//                        if (valueR > 0) {
-//                            datas.add(dataRow);
-//                        }
-//                        break;
-//                    }
-//
-//                }
-//
-//            }
-//            saveData.setDatas(datas);
-//            fis.close();
-//            return saveData;
-//        } catch (Throwable t) {
-//            System.out.println("Throwsable: " + t.getMessage());
-//            return new SaveDataPostInquiredCard();
-//        }
-//    }
-//
-//    public void WriteResultApiInquireCardToFile(String filename, SaveDataPostInquiredCard saveData) {
-//        try {
-//            File excel = new File(filename);
-//            FileInputStream fis = new FileInputStream(excel);
-//            XSSFWorkbook book = new XSSFWorkbook(fis);
-//            XSSFSheet sheet = book.getSheet("api_inquireCard");
-//            for (DataRowInquireCard dataRow : saveData.getDatas()) {
-//                Row row = sheet.getRow(dataRow.getId());
-//                Cell cell = row.getCell(10);
-//                cell.setCellValue(dataRow.getCodeReal());
-//            }
-//            fis.close();
-//            FileOutputStream fos = new FileOutputStream(new File("test.xlsx"));
-//            book.write(fos);
-//            fos.close();
-//        } catch (Exception t) {
-//            System.out.println("Throwable WriteResultApiInquireCardToFile " + t.getMessage());
-//        }
-//    }
-//
     //// Start again
     public SheetsOfFile ReadSheetsOfFile(String fileName) {
         try {
@@ -241,7 +76,7 @@ public class ExcelHelper {
         }
     }
 
-    public DataSheet ReadTestCaseFileFromSheet(String fileName, String sheetName) {
+    public DataSheet ReadTestCaseFileFromSheet(String fileName, String sheetName, MyDataHash myDataHash) {
         try {
             File excel = new File(fileName);
             FileInputStream fis = new FileInputStream(excel);
@@ -251,8 +86,8 @@ public class ExcelHelper {
 //            SaveData saveData = new SaveData();
             DataSheet dataSheet = new DataSheet();
             ArrayList<RowDataFromFile> datas = new ArrayList<RowDataFromFile>();
+            ArrayList<DataHash> dataHash = new ArrayList<>();
             int colmnDataStart = 0, colmnDataStop = 0, colmnDataReqStart = 0, numReal = 0;
-            int colmTn = 0;
             ArrayList<String> nameDataObject = new ArrayList<String>();
             ArrayList<String> nameDataRequest = new ArrayList<String>();
             ArrayList<NameDynamic> nameDynamic = new ArrayList<NameDynamic>();
@@ -317,10 +152,13 @@ public class ExcelHelper {
                                     String nameObj = nameDy.getName();
                                     nameDynamic.add(nameDy);
                                     //                                System.out.println("NameObj: " + nameObj);
-                                    if (nameObj.equals("tn")) {
-                                        colmTn = temp;
-                                    }
+                                    
                                     nameDataObject.add(nameObj);
+                                    DataHash dataHt = myDataHash.CheckNameDataIsHash(sheetName, nameObj);
+                                    if(dataHt != null){
+                                        dataHt.setNumColumn(row2.getCell(temp).getColumnIndex());
+                                        dataHash.add(dataHt);
+                                    }
                                 }
                                 temp++;
                             }
@@ -344,16 +182,21 @@ public class ExcelHelper {
                                     jObjReq.addProperty(nameDataRequest.get(0), GetValueStringFromCell(cell1));
                                     callerValue = GetValueStringFromCell(cell1);
                                 } else if (cell1.getColumnIndex() > colmnDataStart && cell1.getColumnIndex() <= colmnDataReqStart) {
-                                    if (colmTn == cell1.getColumnIndex()) {
-                                        String encrypt = EncryptHelper.AES256(GetValueStringFromCell(cell1));
-                                        jObj.addProperty(nameDataObject.get(arrIndex), encrypt);
-                                    } else {
+                                    if(!dataHash.isEmpty()){
+                                        String valueHash = GetValueStringFromCell(cell1);
+                                        for(DataHash dataH : dataHash){
+                                            if(dataH.getNumColumn() == cell1.getColumnIndex())
+                                                valueHash = EncryptHelper.EncryptData(valueHash, dataH.getAlgorithm(), dataH.getKey(), dataH.getIv());
+                                        }
+                                        jObj.addProperty(nameDataObject.get(arrIndex), valueHash);
+                                    }else{
                                         jObj.addProperty(nameDataObject.get(arrIndex), GetValueStringFromCell(cell1));
                                     }
                                     arrIndex++;
                                 } else if (cell1.getColumnIndex() > colmnDataReqStart && cell1.getColumnIndex() <= colmnDataStop) {
                                     if (cell1.getColumnIndex() == colmnDataStop) {
                                         isSecutiry = GetValueStringFromCell(cell1);
+                                        dataRow.setNameAlgorithm(isSecutiry);
                                     } else {
                                         jObjReq.addProperty(nameDataRequest.get(arrIndexReq), GetValueStringFromCell(cell1));
                                     }
@@ -371,12 +214,13 @@ public class ExcelHelper {
                             jObjReq.add("data", jObj);
 //                            System.out.println("data: " + jObj.toString());
 
-                            if (isSecutiry.equals("chksum")) {
-                                String chksum = CheckSumInquireCard.createCheckSum(callerValue, "a", jObj);
+                            String[] arr = isSecutiry.split("-");
+                            if (arr[0].equals("chksum")) {
+                                String chksum = CheckSumInquireCard.createCheckSum(isSecutiry,callerValue, "a", jObj);
 //                                System.out.println("chksum: " + chksum);
                                 jObjReq.addProperty("chksum", chksum);
-                            } else if (isSecutiry.equals("signature")) {
-                                String signature = RSASHA1Signature.getSignature(callerValue, "a", jObj);
+                            } else if (arr[0].equals("signature")) {
+                                String signature = RSASHA1Signature.getSignature(isSecutiry, callerValue, "a", jObj);
 //                                System.out.println("signature: " + signature);
                                 jObjReq.addProperty("signature", signature);
                             }
@@ -442,18 +286,55 @@ public class ExcelHelper {
             return new URLs();
         }
     }
+    
+     public MyDataHash ReadNameHash(String fileName, String sheetName) {
+         try {
+            File excel = new File(fileName);
+            FileInputStream fis = new FileInputStream(excel);
+            XSSFWorkbook book = new XSSFWorkbook(fis);
+            XSSFSheet sheet = book.getSheet(sheetName);
+            Iterator<Row> itr = sheet.iterator();
+            Row row = itr.next();
+            MyDataHash myDataHash = new MyDataHash();
+            ArrayList<DataHash> dataHahs = new ArrayList<>();
+            while (itr.hasNext()) {
+                row = itr.next();
+                DataHash dataH = new DataHash();
+                Cell cell = row.getCell(0);
+                dataH.setNameApi(GetValueStringFromCell(cell));
+                cell = row.getCell(1);
+                dataH.setNameData(GetValueStringFromCell(cell));
+                cell = row.getCell(2);
+                dataH.setAlgorithm(GetValueStringFromCell(cell));
+                cell = row.getCell(3);
+                dataH.setKey(GetValueStringFromCell(cell));
+                cell = row.getCell(4);
+                if(cell != null)
+                    dataH.setIv(GetValueStringFromCell(cell));
+                dataHahs.add(dataH);
+            }
+            myDataHash.setDataHashs(dataHahs);
+            return myDataHash;
+         }catch (Throwable t) {
+            System.out.println("Throwsable: " + t.getMessage());
+            return new MyDataHash();
+        }
+     }
 
     public DataTestCaseFullList ReadDataFromFileExcel(String fileName) {
         DataTestCaseFullList dataFulls = new DataTestCaseFullList();
         ArrayList<DataTestCaseFull> dataFull = new ArrayList<DataTestCaseFull>();
         SheetsOfFile sheetsOfFile = ReadSheetsOfFile(fileName);
         URLs urls = new URLs();
+        MyDataHash myDataHash = new MyDataHash();
         for (String str : sheetsOfFile.getSheets()) {
             if (str.equals("url")) {
                 urls = ReadURLS(fileName, "url");
-            } else {
+            }else if(str.equals("hash_data")){
+                myDataHash = ReadNameHash(fileName, "hash_data");
+            } else{
                 DataTestCaseFull dataTestCaseFull = new DataTestCaseFull();
-                DataSheet dataSheet = ReadTestCaseFileFromSheet(fileName, str);
+                DataSheet dataSheet = ReadTestCaseFileFromSheet(fileName, str, myDataHash);
                 Gson gson = new Gson();
                 System.out.println("data sheet: " + gson.toJson(dataSheet));
                 String urlValue = GetUrlValueFromUrls(urls, str);
@@ -531,7 +412,7 @@ public class ExcelHelper {
                         ArrayList<MyThread> threads = new ArrayList<MyThread>();
                         CyclicBarrier gate = new CyclicBarrier(dataRow.getThread());
                         for (int k = 0; k < dataRow.getThread(); k++) {
-                            JsonObject jObjNew = CreateJsonOnject(dataFull.getDatas().getNameRequest(), jObj, gson, dataFull.getDatas().getNameDynamic(), k);
+                            JsonObject jObjNew = CreateJsonOnject(dataFull.getDatas().getNameRequest(), jObj, gson, dataFull.getDatas().getNameDynamic(), k, dataRow.getNameAlgorithm());
                             System.out.println("data new: " + jObjNew.toString());
                             MyThread myThread = new MyThread(jObjNew, dataFull.getDataUrl().getUrl(), gate);
                             gate = myThread.getGate();
@@ -582,7 +463,7 @@ public class ExcelHelper {
         return jObj;
     }
 
-    private JsonObject CreateJsonOnject(ArrayList<String> nameRequest, JsonObject jObjOld, Gson gson, ArrayList<NameDynamic> nameDys, int k) throws NoSuchAlgorithmException, UnsupportedEncodingException, SignatureException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException, Exception {
+    private JsonObject CreateJsonOnject(ArrayList<String> nameRequest, JsonObject jObjOld, Gson gson, ArrayList<NameDynamic> nameDys, int k, String nameAlgro) throws NoSuchAlgorithmException, UnsupportedEncodingException, SignatureException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException, Exception {
         JsonObject jObjNew = new JsonObject();
         int security = 0;
         JsonObject jObjTemp = new JsonObject();
@@ -610,10 +491,10 @@ public class ExcelHelper {
             }
         }
         if (security == 1) {
-            String checksum = CheckSumInquireCard.createCheckSum(calleerCode, "a", jObjTemp);
+            String checksum = CheckSumInquireCard.createCheckSum(nameAlgro, calleerCode, "a", jObjTemp);
             jObjNew.addProperty("chksum", checksum);
         } else if (security == 2) {
-            String signature = RSASHA1Signature.getSignature(calleerCode, "a", jObjTemp);
+            String signature = RSASHA1Signature.getSignature(nameAlgro, calleerCode, "a", jObjTemp);
             jObjNew.addProperty("signature", signature);
         }
         return jObjNew;
