@@ -76,13 +76,17 @@ public class EncryptHelper {
     private static String AES256(String str, String key, String iv) throws Exception {
 //        String key = "Kgnk3cpOwDVAtdNfWJ21cCNs3P4IGy81";
 //        String iv = "Kgnk3cpOwDVAtdNf";
-
-        Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
-        SecretKeySpec secrectKey = new SecretKeySpec(key.getBytes(), "AES");
-        cipher.init(Cipher.ENCRYPT_MODE, secrectKey, new IvParameterSpec(iv.getBytes()));
-        byte[] encrypt = cipher.doFinal(str.getBytes("UTF-8"));
-        String result = Base64.encode(encrypt);
-        return result;
+        try{
+            Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+            SecretKeySpec secrectKey = new SecretKeySpec(key.getBytes(), "AES");
+            cipher.init(Cipher.ENCRYPT_MODE, secrectKey, new IvParameterSpec(iv.getBytes()));
+            byte[] encrypt = cipher.doFinal(str.getBytes("UTF-8"));
+            String result = Base64.encode(encrypt);
+            return result;
+        }catch(Exception ex){
+            System.out.println("exception: " + ex.getMessage());
+            return "";
+        }
     }
 
     private static String RC4(String str, String key) throws Exception {

@@ -6,11 +6,13 @@
 package security;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import encrypt.EncryptHelper;
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 
 /**
  *
@@ -18,11 +20,10 @@ import java.security.NoSuchAlgorithmException;
  */
 public class CheckSumInquireCard {
 
-    public static String createCheckSum(String nameChecksum, String caller, String secrectKey, JsonObject jObj) throws NoSuchAlgorithmException, UnsupportedEncodingException{
+    public static String createCheckSum(String nameChecksum, String rawData) throws NoSuchAlgorithmException, UnsupportedEncodingException{
 //        Gson gson = new Gson();
 //        System.out.println("Data Cheksum: " + jObj.toString());
-        String rawData = caller + "|" + jObj.toString() + secrectKey;
-//        System.out.println("RawData: " + rawData);
+        System.out.println("RawData: " + rawData);
         byte[] encrypt = rawData.getBytes();
         String result = "";
         if(nameChecksum.equals("chksum-SHA-256")){
@@ -33,7 +34,6 @@ public class CheckSumInquireCard {
             result = SHA1(encrypt);
         }else if(nameChecksum.equals("chksum-MD5")){
             result = MD5(encrypt);
-        }else if(nameChecksum.equals("signature")){
         }
         return result;
     }

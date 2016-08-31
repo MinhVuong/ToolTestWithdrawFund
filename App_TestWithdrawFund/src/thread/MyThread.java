@@ -33,11 +33,15 @@ public class MyThread extends Thread {
     private String code;
     private long time;
     private CyclicBarrier gate;
+    private String acceptType;
+    private String contentType;
 
-    public MyThread(JsonObject obj, String url, CyclicBarrier gate) {
+    public MyThread(JsonObject obj, String url, CyclicBarrier gate, String acceptType, String contentType) {
         this.obj = obj;
         this.url = url;
         this.gate = gate;
+        this.acceptType = acceptType;
+        this.contentType = contentType;
     }
 
     public void run() {
@@ -46,8 +50,8 @@ public class MyThread extends Thread {
             System.out.println("Run : " + obj.toString());
             CloseableHttpClient httpClient = HttpClients.createDefault();
             HttpPost httpPost = new HttpPost(url);
-            httpPost.setHeader("Accept", "text/plain");
-            httpPost.setHeader("Content-type", "text/plain");
+            httpPost.setHeader("Accept", acceptType);
+            httpPost.setHeader("Content-type", contentType);
             httpPost.setEntity(new StringEntity(obj.toString()));
             long startTime = System.currentTimeMillis();
             CloseableHttpResponse httpResponse = httpClient.execute(httpPost);
@@ -64,10 +68,10 @@ public class MyThread extends Thread {
                 JsonObject jresp = new JsonObject();
                 Gson gson = new Gson();
                 jresp = gson.fromJson(response.toString(), JsonObject.class);
-                JsonElement je = jresp.get("code");
+//                JsonElement je = jresp.get("code");
                 
-                code = je.getAsString();
-                System.out.println("Thread - data resp: " + jresp.toString());
+                code = jresp.toString();
+//                System.out.println("Thread - data resp: " + jresp.toString());
             } else {
                 System.out.println("API Fail status code = " + httpResponse.getStatusLine().getStatusCode());
 //            return new DataResponseWithdrawFunds();/
