@@ -24,7 +24,7 @@ public class CheckSumInquireCard {
 //        Gson gson = new Gson();
 //        System.out.println("Data Cheksum: " + jObj.toString());
         System.out.println("RawData: " + rawData);
-        byte[] encrypt = rawData.getBytes();
+        byte[] encrypt = rawData.getBytes("UTF-8");
         String result = "";
         if(nameChecksum.equals("chksum-SHA-256")){
             result = SHA256(encrypt);
@@ -86,6 +86,7 @@ public class CheckSumInquireCard {
             }
             hexString.append(hex);
         }
+
         return hexString.toString();
     }
     

@@ -50,7 +50,7 @@ public class MyThread extends Thread {
             System.out.println("Run : " + obj.toString());
             CloseableHttpClient httpClient = HttpClients.createDefault();
             HttpPost httpPost = new HttpPost(url);
-            httpPost.setHeader("Accept", acceptType);
+            httpPost.setHeader("Accept-Content Type", acceptType);
             httpPost.setHeader("Content-type", contentType);
             httpPost.setEntity(new StringEntity(obj.toString()));
             long startTime = System.currentTimeMillis();

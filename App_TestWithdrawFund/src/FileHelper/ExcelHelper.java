@@ -152,23 +152,28 @@ public class ExcelHelper {
                                     ArrayList<DataInput> listDataIputLevel2 = new ArrayList<>();
                                     cellColmn = row3.getCell(numColmn);
                                     cellColmn2 = row4.getCell(numColmn);
-                                    while (!GetValueStringFromCell(cellColmn).equals("")) {
-                                        nameDy = CutStrGetNameDynamic(GetValueStringFromCell(cellColmn2));
-                                        if (nameDy.getIsDyn().equals("1")){      // Check Data is change when run Thread
-                                            nameDynamic.add(nameDy);
+                                    String tempT = GetValueStringFromCell(cellColmn);
+                                    if(!tempT.equals("")){
+                                        while (!GetValueStringFromCell(cellColmn).equals("")) {
+                                            nameDy = CutStrGetNameDynamic(GetValueStringFromCell(cellColmn2));
+                                            if (nameDy.getIsDyn().equals("1")){      // Check Data is change when run Thread
+                                                nameDynamic.add(nameDy);
+                                            }
+                                            dataHt = myDataHash.CheckNameDataIsHash(sheetName, nameDy.getName());
+                                            if (dataHt != null) {
+                                                dataHt.setNumColumn(numColmn);
+                                                dataHash.add(dataHt);
+                                            }
+                                            listDataIputLevel2.add(new DataInput(GetValueStringFromCell(cellColmn), nameDy.getName()));
+                                            numColmn++;
+                                            cellColmn = row3.getCell(numColmn);
+                                            cellColmn2 = row4.getCell(numColmn);
                                         }
-                                        dataHt = myDataHash.CheckNameDataIsHash(sheetName, nameDy.getName());
-                                        if (dataHt != null) {
-                                            dataHt.setNumColumn(numColmn);
-                                            dataHash.add(dataHt);
-                                        }
-                                        listDataIputLevel2.add(new DataInput(GetValueStringFromCell(cellColmn), nameDy.getName()));
-                                        numColmn++;
-                                        cellColmn = row3.getCell(numColmn);
-                                        cellColmn2 = row4.getCell(numColmn);
+                                        numColmn--;
+                                        dataInputLevel2.add(new DataInputLevel2(listDataIputLevel2));
+                                    }else{
+                                        dataInputLevel2.add(new DataInputLevel2(listDataIputLevel2));
                                     }
-                                    numColmn--;
-                                    dataInputLevel2.add(new DataInputLevel2(listDataIputLevel2));
                                 }
                                 numColmn++;
                             }
@@ -208,7 +213,10 @@ public class ExcelHelper {
                                                 int value = GetValueIntegerFromCell(cell1);
                                                 jObj.addProperty(dataInputLevel2.get(arrIndexReq).getListDataIputLevel2().get(i).getName(), value);
                                             } else if (dataInputLevel2.get(arrIndexReq).getListDataIputLevel2().get(i).getType().equals("Object")) {
-
+                                                String value = GetValueStringFromCell(cell1);
+                                                Gson gson = new Gson();
+                                                JsonObject obj = gson.fromJson(value, JsonObject.class);
+                                                jObj.add(dataInputLevel2.get(arrIndexReq).getListDataIputLevel2().get(i).getName(), obj);
                                             }
                                             i++;
                                             if (i < size) {
@@ -326,17 +334,19 @@ public class ExcelHelper {
                 DataURL dataUrl = new DataURL();
 
                 Cell cell = row.getCell(0);
-                dataUrl.setNameSheet(GetValueStringFromCell(cell));
-                cell = row.getCell(1);
-                dataUrl.setUrl(GetValueStringFromCell(cell));
-                cell = row.getCell(2);
-                dataUrl.setAcceptType(GetValueStringFromCell(cell));
-                cell = row.getCell(3);
-                dataUrl.setContentType(GetValueStringFromCell(cell));
-                cell = row.getCell(4);
-                dataUrl.setRawData(GetValueStringFromCell(cell));
+                if((cell != null) && (!GetValueStringFromCell(cell).equals(""))){
+                    dataUrl.setNameSheet(GetValueStringFromCell(cell));
+                    cell = row.getCell(1);
+                    dataUrl.setUrl(GetValueStringFromCell(cell));
+                    cell = row.getCell(2);
+                    dataUrl.setAcceptType(GetValueStringFromCell(cell));
+                    cell = row.getCell(3);
+                    dataUrl.setContentType(GetValueStringFromCell(cell));
+                    cell = row.getCell(4);
+                    dataUrl.setRawData(GetValueStringFromCell(cell));
 
-                dataUrls.add(dataUrl);
+                    dataUrls.add(dataUrl);
+                }
 //                Gson gson = new Gson();
 //                System.out.println("url: " + gson.toJson(dataUrl));
             }
@@ -503,7 +513,7 @@ public class ExcelHelper {
                         for (MyThread thread : threads) {
                             thread.start();
                         }
-                        int nameT = dataRow.getId() - 3 + 1;
+                        int nameT = dataRow.getId() - 5 + 1;
                         String nameofSheet = dataFull.getDataUrl().getNameSheet() + "_" + Integer.toString(nameT);
                         threadResult.setNameSheet(nameofSheet);
                         // Get Result After call API
@@ -586,6 +596,11 @@ public class ExcelHelper {
                                 jsonChildNew.addProperty(dataI2.getName(), value);
                             }
                         } else if (dataI2.getType().equals("Object")) {
+                            je = jsonChild.get(dataI2.getName());
+                            if (je != null) {
+                                JsonObject value = je.getAsJsonObject();
+                                jsonChildNew.add(dataI2.getName(), value);
+                            }
                         }
                     }
                     jObjNew.add(dataI.getName(), jsonChildNew);
