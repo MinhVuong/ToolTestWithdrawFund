@@ -22,14 +22,12 @@ import javax.crypto.spec.SecretKeySpec;
  */
 public class EncryptHelper {
 
-    
-    
     public static String SHA512(byte[] str) throws NoSuchAlgorithmException, UnsupportedEncodingException {
 
         MessageDigest md = MessageDigest.getInstance("SHA-512");
         md.update(str);
         byte byteData[] = md.digest();
-        
+
         StringBuffer hexString = new StringBuffer();
         for (int i = 0; i < byteData.length; i++) {
             String hex = Integer.toHexString(0xff & byteData[i]);
@@ -40,12 +38,13 @@ public class EncryptHelper {
         }
         return hexString.toString();
     }
+
     public static String SHA1(byte[] str) throws NoSuchAlgorithmException, UnsupportedEncodingException {
 
         MessageDigest md = MessageDigest.getInstance("SHA-1");
         md.update(str);
         byte byteData[] = md.digest();
-        
+
         StringBuffer hexString = new StringBuffer();
         for (int i = 0; i < byteData.length; i++) {
             String hex = Integer.toHexString(0xff & byteData[i]);
@@ -56,12 +55,13 @@ public class EncryptHelper {
         }
         return hexString.toString();
     }
+
     public static String MD5(byte[] str) throws NoSuchAlgorithmException, UnsupportedEncodingException {
 
         MessageDigest md = MessageDigest.getInstance("MD5");
         md.update(str);
         byte byteData[] = md.digest();
-        
+
         StringBuffer hexString = new StringBuffer();
         for (int i = 0; i < byteData.length; i++) {
             String hex = Integer.toHexString(0xff & byteData[i]);
@@ -76,35 +76,37 @@ public class EncryptHelper {
     private static String AES256(String str, String key, String iv) throws Exception {
 //        String key = "Kgnk3cpOwDVAtdNfWJ21cCNs3P4IGy81";
 //        String iv = "Kgnk3cpOwDVAtdNf";
-        try{
+        try {
             Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
             SecretKeySpec secrectKey = new SecretKeySpec(key.getBytes(), "AES");
             cipher.init(Cipher.ENCRYPT_MODE, secrectKey, new IvParameterSpec(iv.getBytes()));
             byte[] encrypt = cipher.doFinal(str.getBytes("UTF-8"));
             String result = Base64.encode(encrypt);
             return result;
-        }catch(Exception ex){
+        } catch (Exception ex) {
             System.out.println("exception: " + ex.getMessage());
             return "";
         }
     }
 
     private static String RC4(String str, String key) throws Exception {
-        SecureRandom sr = new SecureRandom(key.getBytes());
-        KeyGenerator kg = KeyGenerator.getInstance("RC4");
-        kg.init(sr);
-        SecretKey sk = kg.generateKey();
-
-        // create an instance of cipher
-        Cipher cipher = Cipher.getInstance("RC4");
-
-        // initialize the cipher with the key
-        cipher.init(Cipher.ENCRYPT_MODE, sk);
-
+        SecretKey skey = new SecretKeySpec(key.getBytes(), "RC4");
         // enctypt!
-        byte[] encrypted = cipher.doFinal(str.getBytes());
+        byte[] encrypted = encrypt(str.getBytes("UTF-8"), skey);
         String result = Base64.encode(encrypted);
         return result;
+    }
+
+    public static byte[] encrypt(byte[] text, SecretKey key){
+        byte[] cipherText = null;
+        try {
+            Cipher cipher = Cipher.getInstance("RC4");
+            cipher.init(1, key);
+            cipherText = cipher.doFinal(text);
+        } catch (Exception e) {
+            System.out.println("Can't encrypt message using RC4" + e.getMessage());
+        }
+        return cipherText;
     }
 
     private static String bytes2String(byte[] bytes) {

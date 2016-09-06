@@ -34,7 +34,7 @@ public class App_TestWithdrawFund {
         Gson gson = new Gson();
         ExcelHelper excelH = new ExcelHelper();
         DataTestCaseFullList dataFulls = excelH.ReadDataFromFileExcel("test.xlsx");
-//        ResultApi resultApi = excelH.RunTest(dataFulls);
+        ResultApi resultApi = excelH.RunTest(dataFulls);
 //        excelH.WriteResult("test.xlsx", resultApi);
 
     }
